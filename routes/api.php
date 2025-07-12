@@ -6,6 +6,7 @@ use App\Http\Controllers\api\DepartmentController;
 use App\Http\Controllers\api\DesignationController;
 use App\Http\Controllers\api\AdminAuthController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\LeaveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,10 @@ Route::delete('/del-emplyee/{id}', [EmployeeController::class, 'destroy']);
 Route::post('/update-emplyee/{id}', [EmployeeController::class, 'update']);
 
 Route::get('/view-emplyee/{id}', [EmployeeController::class, 'show']);
+
+// Leave
+
+Route::post('/add-leave', [LeaveController::class, 'store']);
 
 
 

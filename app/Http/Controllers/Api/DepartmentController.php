@@ -8,22 +8,10 @@ use App\Models\Department;
 
 class DepartmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
    public function store(Request $request)
 {
-    // Debug: Check incoming data (optional, comment out in production)
-
-
 
     // Validate input
     $validated = $request->validate([
@@ -42,24 +30,72 @@ class DepartmentController extends Controller
     ], 201);
 }
 
-    public function show(string $id)
-    {
-        //
+
+
+public function index()
+{
+    // Get all departments
+    $departments = Department::all();
+
+    // Return success response
+    return response()->json([
+        'message' => 'Departments retrieved successfully',
+        'data' => $departments
+    ], 200);
+}
+
+
+public function destroy($id)
+{
+    // Find the department by ID
+    $department = Department::find($id);
+
+    // Check if department exists
+    if (!$department) {
+        return response()->json([
+            'message' => 'Department not found'
+        ], 404);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+    // Delete the department
+    $department->delete();
+
+    // Return success response
+    return response()->json([
+        'message' => 'Department deleted successfully'
+    ], 200);
+}
+
+
+
+
+public function update(Request $request, $id)
+{
+    // Find the department by ID
+    $department = Department::find($id);
+
+    // Check if department exists
+    if (!$department) {
+        return response()->json([
+            'message' => 'Department not found'
+        ], 404);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    // Validate input
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+    ]);
+
+    // Update department details
+    $department->update([
+        'name' => $validated['name'],
+    ]);
+
+    // Return success response
+    return response()->json([
+        'message' => 'Department updated successfully',
+        'data' => $department
+    ], 200);
+}
+
 }

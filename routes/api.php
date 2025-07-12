@@ -36,6 +36,12 @@ Route::post('/update-dept/{id}', [DepartmentController::class, 'update']);
 
 Route::post('/desi', [DesignationController::class, 'store']);
 
+Route::get('/get-desi', [DesignationController::class, 'index']);
+
+Route::delete('/del-desi/{id}', [DesignationController::class, 'destroy']);
+
+Route::post('/update-desi/{id}', [DesignationController::class, 'update']);
+
 
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
 Route::post('/admin/logout', [AdminAuthController::class, 'logout']);

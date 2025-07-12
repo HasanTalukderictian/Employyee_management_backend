@@ -38,4 +38,12 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout']);
 // Employee
 Route::post('/add-emplyee', [EmployeeController::class, 'store']);
 
+Route::get('/get-emplyee', [EmployeeController::class, 'index']);
+Route::delete('/del-emplyee/{id}', [EmployeeController::class, 'destroy']);
+
+Route::post('/update-emplyee/{id}', [EmployeeController::class, 'update']);
+
+Route::get('/view-emplyee/{id}', [EmployeeController::class, 'show']);
+
+
 

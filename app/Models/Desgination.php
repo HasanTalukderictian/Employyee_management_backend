@@ -12,6 +12,6 @@ class Desgination extends Model
     protected $table ='desgination';
 
     protected $fillable = [
-        'title'
+        'name'
     ];
 }

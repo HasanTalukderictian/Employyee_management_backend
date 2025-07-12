@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\DepartmentController;
 use App\Http\Controllers\api\DesignationController;
 use App\Http\Controllers\api\AdminAuthController;
+use App\Http\Controllers\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +33,9 @@ Route::post('/desi', [DesignationController::class, 'store']);
 
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
 Route::post('/admin/logout', [AdminAuthController::class, 'logout']);
+
+
+// Employee
+Route::post('/add-emplyee', [EmployeeController::class, 'store']);
+
+

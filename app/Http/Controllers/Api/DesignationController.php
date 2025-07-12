@@ -26,12 +26,12 @@ class DesignationController extends Controller
 
     // Validate input
     $validated = $request->validate([
-        'title' => 'required|string|max:255',
+        'name' => 'required|string|max:255',
     ]);
 
     // Create new Desgination
     $desgination = Desgination::create([
-        'title' => $validated['title'],
+        'name' => $validated['name'],
     ]);
 
     // Return success response

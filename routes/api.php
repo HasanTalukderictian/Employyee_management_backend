@@ -7,6 +7,8 @@ use App\Http\Controllers\api\DesignationController;
 use App\Http\Controllers\api\AdminAuthController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\SalaryController;
+use App\Http\Controllers\AttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,10 +63,19 @@ Route::get('/view-emplyee/{id}', [EmployeeController::class, 'show']);
 // Leave
 
 Route::post('/add-leave', [LeaveController::class, 'store']);
-
-
 Route::get('/get-leave/{id}', [LeaveController::class, 'show']);
 Route::delete('/del-leave/{id}', [LeaveController::class, 'destroy']);
+
+
+// Salary
+Route::post('/add-salary', [SalaryController::class, 'store']);
+Route::get('/get-salary/{id}', [SalaryController::class, 'getSalaryByEmployeeId']);
+
+// Salary
+Route::post('/add-check/{id}', [AttendanceController::class, 'store']);
+Route::post('/add-checkout/{id}', [AttendanceController::class, 'checkOut']);
+
+
 
 
 

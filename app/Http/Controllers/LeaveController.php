@@ -31,4 +31,44 @@ class LeaveController extends Controller
             'data'    => $leave
         ], 201);
     }
+
+
+
+
+     public function show($id)
+    {
+        $leave = Leave::with('employee')->find($id);
+
+        if (!$leave) {
+            return response()->json([
+                'message' => 'Leave record not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $leave
+        ]);
+    }
+
+
+
+     public function destroy($id)
+    {
+        $leave = Leave::find($id);
+
+        if (!$leave) {
+            return response()->json([
+                'message' => 'Leave record not found'
+            ], 404);
+        }
+
+        $leave->delete();
+
+        return response()->json([
+            'message' => 'Leave record deleted successfully'
+        ]);
+    }
+
+
+
 }

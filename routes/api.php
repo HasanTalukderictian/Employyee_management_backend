@@ -63,4 +63,8 @@ Route::get('/view-emplyee/{id}', [EmployeeController::class, 'show']);
 Route::post('/add-leave', [LeaveController::class, 'store']);
 
 
+Route::get('/get-leave/{id}', [LeaveController::class, 'show']);
+Route::delete('/del-leave/{id}', [LeaveController::class, 'destroy']);
+
+
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,10 @@ Route::get('/get-salary/{id}', [SalaryController::class, 'getSalaryByEmployeeId'
 // Salary
 Route::post('/add-check/{id}', [AttendanceController::class, 'store']);
 Route::post('/add-checkout/{id}', [AttendanceController::class, 'checkOut']);
+
+Route::post('/users-store', [UsersController::class, 'store']);
+Route::post('/users-login', [UsersController::class, 'login']);
+Route::post('/users-logout', [UsersController::class, 'logout'])->middleware('auth:sanctum');
 
 
 

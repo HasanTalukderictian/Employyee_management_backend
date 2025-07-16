@@ -48,7 +48,7 @@ Route::post('/update-desi/{id}', [DesignationController::class, 'update']);
 
 
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
-Route::post('/admin/logout', [AdminAuthController::class, 'logout']);
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->middleware('auth:sanctum');;
 
 
 // Employee

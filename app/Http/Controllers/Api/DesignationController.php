@@ -32,7 +32,7 @@ class DesignationController extends Controller
 
     // Validate input
     $validated = $request->validate([
-        'name' => 'required|string|max:255',
+        'name' => 'required|string|max:255|regex:/^[a-zA-Z0-9\s]+$/',
     ]);
 
     // Create new Desgination
@@ -65,7 +65,7 @@ class DesignationController extends Controller
 
     // Validate input
     $validated = $request->validate([
-        'name' => 'required|string|max:255',
+        'name' => 'required|string|max:255|regex:/^[a-zA-Z0-9\s]+$/',
     ]);
 
     // Update department details

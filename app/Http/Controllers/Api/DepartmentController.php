@@ -32,15 +32,24 @@ class DepartmentController extends Controller
     /**
      * Display a listing of departments.
      */
-    public function index()
-    {
-        $departments = Department::all();
+   public function index(Request $request)
+{
+    $search = $request->query('search');
 
-        return response()->json([
-            'message' => 'Departments retrieved successfully',
-            'data' => $departments
-        ], 200);
+    $query = Department::query();
+
+    if ($search) {
+        $query->where('name', 'like', "%$search%");
     }
+
+    $departments = $query->orderBy('id', 'desc')->get();
+
+    return response()->json([
+        'message' => 'Departments retrieved successfully',
+        'data' => $departments
+    ], 200);
+}
+
 
     /**
      * Delete a department by ID.

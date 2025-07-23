@@ -28,13 +28,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 // Department
-Route::post('/dept', [DepartmentController::class, 'store']);
+Route::post('/add-dept', [DepartmentController::class, 'store']);
 
 Route::get('/get-dept', [DepartmentController::class, 'index']);
 
 Route::delete('/del-dept/{id}', [DepartmentController::class, 'destroy']);
 
-Route::post('/update-dept/{id}', [DepartmentController::class, 'update']);
+Route::post('/edit-dept/{id}', [DepartmentController::class, 'update']);
 
 // Designation
 
@@ -48,7 +48,7 @@ Route::post('/update-desi/{id}', [DesignationController::class, 'update']);
 
 
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
-Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->middleware('auth:sanctum');;
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->middleware('auth:sanctum');
 
 
 // Employee

@@ -38,7 +38,7 @@ Route::post('/edit-dept/{id}', [DepartmentController::class, 'update']);
 
 // Designation
 
-Route::post('/desi', [DesignationController::class, 'store']);
+Route::post('/add-desi', [DesignationController::class, 'store']);
 
 Route::get('/get-desi', [DesignationController::class, 'index']);
 

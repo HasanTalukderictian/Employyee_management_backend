@@ -52,11 +52,14 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->middleware
 
 
 // Employee
-Route::post('/add-emplyee', [EmployeeController::class, 'store']);
+Route::middleware(['api'])->group(function () {
+    Route::post('/add-emplyee', [EmployeeController::class, 'store']);
+});
 
 Route::get('/get-emplyee', [EmployeeController::class, 'index']);
 Route::delete('/del-emplyee/{id}', [EmployeeController::class, 'destroy']);
 
+Route::get('/get-employee/{id}', [EmployeeController::class, 'show']);
 Route::post('/update-emplyee/{id}', [EmployeeController::class, 'update']);
 
 Route::get('/view-emplyee/{id}', [EmployeeController::class, 'show']);

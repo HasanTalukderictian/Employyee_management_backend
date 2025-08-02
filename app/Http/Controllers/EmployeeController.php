@@ -63,6 +63,8 @@ class EmployeeController extends Controller
 
 
 
+
+
 public function destroy($id)
 {
     // Find the employee by ID

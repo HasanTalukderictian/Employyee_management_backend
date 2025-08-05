@@ -52,4 +52,50 @@ class SalaryController extends Controller
     ], 200);
 }
 
+
+public function index(Request $request)
+{
+    $query = Salary::with('employee'); // Make sure 'employee' relationship exists in Salary model
+
+    // Apply search by employee first name if provided
+    if ($request->has('search')) {
+        $searchTerm = $request->input('search');
+
+        $query->whereHas('employee', function ($q) use ($searchTerm) {
+            $q->where('first_name', 'like', '%' . $searchTerm . '%');
+        });
+    }
+
+    $salaries = $query->get();
+
+    return response()->json([
+        'message' => 'Salaries retrieved successfully',
+        'data' => $salaries
+    ]);
+}
+
+
+public function destroy($id)
+{
+    // Find the salary record by ID
+    $salary = Salary::find($id);
+
+    // If not found, return 404
+    if (!$salary) {
+        return response()->json([
+            'message' => 'Salary record not found.',
+        ], 404);
+    }
+
+    // Delete the salary record
+    $salary->delete();
+
+    // Return success response
+    return response()->json([
+        'message' => 'Salary record deleted successfully.',
+    ], 200);
+}
+
+
+
 }

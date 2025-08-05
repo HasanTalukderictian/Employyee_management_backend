@@ -24,7 +24,6 @@ class EmployeeController extends Controller
             'department_id'   => 'required|exists:department,id',
             'designation_id' => 'required|exists:desgination,id',
             'hire_date'       => 'required|date',
-            'salary'          => 'required|numeric',
             'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status'          => 'required|in:Active,Inactive',
         ]);

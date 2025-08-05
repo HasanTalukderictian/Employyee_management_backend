@@ -23,7 +23,6 @@ class Employee extends Model
         'department_id',
         'designation_id',
         'hire_date',
-        'salary',
         'profile_picture',
         'status',
     ];

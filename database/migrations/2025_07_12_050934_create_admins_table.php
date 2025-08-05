@@ -24,7 +24,6 @@ public function up()
             $table->unsignedBigInteger('department_id');
             $table->unsignedBigInteger('designation_id');
             $table->date('hire_date');
-            $table->decimal('salary', 10, 2);
             $table->string('profile_picture')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();

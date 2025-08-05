@@ -74,6 +74,8 @@ Route::delete('/del-leave/{id}', [LeaveController::class, 'destroy']);
 // Salary
 Route::post('/add-salary', [SalaryController::class, 'store']);
 Route::get('/get-salary/{id}', [SalaryController::class, 'getSalaryByEmployeeId']);
+Route::get('/get-salary', [SalaryController::class, 'index']);
+Route::get('/del-salary/{id}', [SalaryController::class, 'destroy']);
 
 // Salary
 Route::post('/add-check/{id}', [AttendanceController::class, 'store']);

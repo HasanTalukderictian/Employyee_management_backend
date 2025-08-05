@@ -81,6 +81,8 @@ Route::post('/add-checkout/{id}', [AttendanceController::class, 'checkOut']);
 
 Route::post('/users-store', [UsersController::class, 'store']);
 Route::post('/users-login', [UsersController::class, 'login']);
+Route::get('/get-users', [UsersController::class, 'view']);
+
 Route::post('/users-logout', [UsersController::class, 'logout'])->middleware('auth:sanctum');
 
 

@@ -17,7 +17,8 @@ class UsersController extends Controller
         // Validate input
         $validatedData = $request->validate([
             'employee_id' => 'required|exists:employee,id',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:userall,email',
+
             'password' => 'required|string|min:6',
         ]);
 
@@ -75,4 +76,20 @@ class UsersController extends Controller
             'message' => 'Logged out successfully',
         ], 200);
     }
+
+    /**
+ * Display a list of users with employee details.
+ */
+public function view()
+{
+    // Eager load employee with designation and department
+    $users = UsersModel::with('employee.designation', 'employee.department')->get();
+
+    return response()->json([
+        'message' => 'User list with employee, designation, and department details',
+        'data' => $users
+    ], 200);
+}
+
+
 }

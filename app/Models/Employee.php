@@ -33,7 +33,7 @@ class Employee extends Model
      */
     public function department()
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(Department::class, 'department_id');
     }
 
     /**
@@ -41,6 +41,6 @@ class Employee extends Model
      */
     public function designation()
     {
-        return $this->belongsTo(Desgination::class);
+        return $this->belongsTo(Desgination::class, 'designation_id');
     }
 }

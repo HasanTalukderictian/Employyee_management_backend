@@ -38,7 +38,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'admins',
         ],
 
 
@@ -46,6 +46,14 @@ return [
         'driver' => 'session',
         'provider' => 'admins',
     ],
+
+    'api' => [
+        'driver' => 'token',
+        'provider' => 'admins', // Change this if needed
+        'hash' => false,
+    ],
+
+
     ],
 
     /*
@@ -73,7 +81,7 @@ return [
 
         'admins' => [  // ⭐ add this block
         'driver' => 'eloquent',
-        'model' => App\Models\Admin::class,
+       'model' => App\Models\Admin::class,
     ],
 
 

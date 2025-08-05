@@ -3,17 +3,29 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens; // ✅ Add this
+use Illuminate\Notifications\Notifiable;
 
-class UsersModel extends Model
+class UsersModel extends Authenticatable
 {
-    use HasFactory, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable; // ✅ Include HasApiTokens here
 
-
-    protected $table ='users';
+    protected $table = 'userall';
 
     protected $fillable = [
-        'employee_id', 'email', 'password'
+        'employee_id',
+        'email',
+        'password',
     ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id');
+    }
 }

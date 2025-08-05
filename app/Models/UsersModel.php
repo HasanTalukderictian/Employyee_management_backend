@@ -17,6 +17,7 @@ class UsersModel extends Authenticatable
         'employee_id',
         'email',
         'password',
+         'role',
     ];
 
     protected $hidden = [

@@ -10,17 +10,23 @@ class DesignationController extends Controller
     /**
      * Display a listing of the resource.
      */
- public function index()
+public function index(Request $request)
 {
-    // Get all departments
-    $desgination = Desgination::all();
+    $query = Desgination::query();
 
-    // Return success response
+    if ($request->has('search') && !empty($request->search)) {
+        $searchTerm = $request->search;
+        $query->where('name', 'like', '%' . $searchTerm . '%');
+    }
+
+    $desgination = $query->get();
+
     return response()->json([
         'message' => 'Desgination retrieved successfully',
         'data' => $desgination
     ], 200);
 }
+
     /**
      * Store a newly created resource in storage.
      */

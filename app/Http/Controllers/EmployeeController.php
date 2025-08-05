@@ -47,21 +47,22 @@ class EmployeeController extends Controller
         ], 201);
     }
 
-
-
-    public function index()
+public function index(Request $request)
 {
-    // Fetch all employees with related department and designation data
-    $employees = Employee::with(['department', 'designation'])->get();
+    $query = Employee::with(['department', 'designation']);
 
-    // Return as JSON response
+    if ($request->has('search') && !empty($request->search)) {
+        $searchTerm = $request->search;
+        $query->where('first_name', 'like', "%{$searchTerm}%");
+    }
+
+    $employees = $query->get();
+
     return response()->json([
         'message' => 'Employees retrieved successfully',
         'data' => $employees
     ], 200);
 }
-
-
 
 
 

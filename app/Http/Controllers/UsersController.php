@@ -13,27 +13,29 @@ class UsersController extends Controller
      * Store (Register) a new user.
      */
     public function store(Request $request)
-    {
-        // Validate input
-        $validatedData = $request->validate([
-            'employee_id' => 'required|exists:employee,id',
-            'email' => 'required|email|unique:userall,email',
+{
+    // Validate input
+    $validatedData = $request->validate([
+        'employee_id' => 'required|exists:employee,id',
+        'email' => 'required|email|unique:userall,email',
+        'password' => 'required|string|min:6',
+        'role' => 'required|string|in:Admin,Normal User', // Adjust roles as needed
+    ]);
 
-            'password' => 'required|string|min:6',
-        ]);
+    // Create user with hashed password and role
+    $user = UsersModel::create([
+        'employee_id' => $validatedData['employee_id'],
+        'email' => $validatedData['email'],
+        'password' => Hash::make($validatedData['password']),
+        'role' => $validatedData['role'],
+    ]);
 
-        // Create user with hashed password
-        $user = UsersModel::create([
-            'employee_id' => $validatedData['employee_id'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-        ]);
+    return response()->json([
+        'message' => 'User created successfully',
+        'data' => $user,
+    ], 201);
+}
 
-        return response()->json([
-            'message' => 'User created successfully',
-            'data' => $user,
-        ], 201);
-    }
 
     /**
      * Login user with email and password, generate token.

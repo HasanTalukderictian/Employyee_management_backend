@@ -10,6 +10,7 @@ use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\AdminDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,7 +76,7 @@ Route::delete('/del-leave/{id}', [LeaveController::class, 'destroy']);
 Route::post('/add-salary', [SalaryController::class, 'store']);
 Route::get('/get-salary/{id}', [SalaryController::class, 'getSalaryByEmployeeId']);
 Route::get('/get-salary', [SalaryController::class, 'index']);
-Route::get('/del-salary/{id}', [SalaryController::class, 'destroy']);
+Route::delete('/del-salary/{id}', [SalaryController::class, 'destroy']);
 
 // Salary
 Route::post('/add-check/{id}', [AttendanceController::class, 'store']);
@@ -84,6 +85,10 @@ Route::post('/add-checkout/{id}', [AttendanceController::class, 'checkOut']);
 Route::post('/users-store', [UsersController::class, 'store']);
 Route::post('/users-login', [UsersController::class, 'login']);
 Route::get('/get-users', [UsersController::class, 'view']);
+
+//admin
+
+Route::get('/get-all-data', [AdminDashboardController::class, 'index']);
 
 Route::post('/users-logout', [UsersController::class, 'logout'])->middleware('auth:sanctum');
 

@@ -83,6 +83,7 @@ Route::post('/add-check/{id}', [AttendanceController::class, 'store']);
 Route::post('/add-checkout/{id}', [AttendanceController::class, 'checkOut']);
 
 Route::post('/users-store', [UsersController::class, 'store']);
+Route::delete('/del-users/{id}', [UsersController::class, 'destroy']);
 Route::post('/users-login', [UsersController::class, 'login']);
 Route::get('/get-users', [UsersController::class, 'view']);
 
@@ -93,6 +94,5 @@ Route::get('/get-all-data', [AdminDashboardController::class, 'index']);
 Route::post('/users-logout', [UsersController::class, 'logout'])->middleware('auth:sanctum');
 
 
-
-
+Route::get('/test-email', [UsersController::class, 'sendmail']);
 

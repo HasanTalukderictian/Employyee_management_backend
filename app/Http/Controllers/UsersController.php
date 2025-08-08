@@ -6,32 +6,49 @@ use Illuminate\Http\Request;
 use App\Models\UsersModel;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserCreatedMail;
 
 class UsersController extends Controller
 {
     /**
      * Store (Register) a new user.
      */
-    public function store(Request $request)
+   public function store(Request $request)
 {
-    // Validate input
+    // ✅ Validate input
     $validatedData = $request->validate([
         'employee_id' => 'required|exists:employee,id',
-        'email' => 'required|email|unique:userall,email',
-        'password' => 'required|string|min:6',
-        'role' => 'required|string|in:Admin,Normal User', // Adjust roles as needed
+        'email'       => 'required|email|unique:userall,email',
+        'password'    => 'required|string|min:6',
+        'role'        => 'required|string|in:Admin,Normal User',
     ]);
 
-    // Create user with hashed password and role
+    // 🔐 Store original password for sending via email
+    $plainPassword = $validatedData['password'];
+
+    // ✅ Create user with hashed password
     $user = UsersModel::create([
         'employee_id' => $validatedData['employee_id'],
-        'email' => $validatedData['email'],
-        'password' => Hash::make($validatedData['password']),
-        'role' => $validatedData['role'],
+        'email'       => $validatedData['email'],
+        'password'    => Hash::make($plainPassword),
+        'role'        => $validatedData['role'],
     ]);
 
+    // 📧 Send email (catch failure optionally)
+    try {
+        Mail::to($user->email)->send(new UserCreatedMail($user->email, $plainPassword));
+    } catch (\Exception $e) {
+        // Log or handle failure silently
+        return response()->json([
+            'message' => 'User created, but failed to send email',
+            'data' => $user,
+            'error' => $e->getMessage()
+        ], 201);
+    }
+
     return response()->json([
-        'message' => 'User created successfully',
+        'message' => 'User created successfully and email sent',
         'data' => $user,
     ], 201);
 }
@@ -93,5 +110,35 @@ public function view()
     ], 200);
 }
 
+
+/**
+ * Delete a user by ID.
+ */
+public function destroy($id)
+{
+    $user = UsersModel::find($id);
+
+    if (!$user) {
+        return response()->json([
+            'message' => 'User not found.',
+        ], 404);
+    }
+
+    $user->delete();
+
+    return response()->json([
+        'message' => 'User deleted successfully.',
+    ], 200);
+}
+
+ public function sendmail()
+    {
+        Mail::raw('This is a test email.', function ($message) {
+            $message->to('your-email@example.com') // Change to your test email
+                    ->subject('Test Email');
+        });
+
+        return response()->json(['message' => 'Test email sent!']);
+    }
 
 }

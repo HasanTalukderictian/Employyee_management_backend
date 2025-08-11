@@ -11,6 +11,7 @@ use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +87,15 @@ Route::post('/users-store', [UsersController::class, 'store']);
 Route::delete('/del-users/{id}', [UsersController::class, 'destroy']);
 Route::post('/users-login', [UsersController::class, 'login']);
 Route::get('/get-users', [UsersController::class, 'view']);
+
+
+// Task
+
+
+
+Route::get('/tasks', [TaskController::class, 'index']); 
+Route::post('/add-task', [TaskController::class, 'store']); 
+Route::put('/tasks/{id}', [TaskController::class, 'update']); 
 
 //admin
 

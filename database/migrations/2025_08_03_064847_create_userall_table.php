@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('employee_id');
             $table->string('email')->unique();
-             $table->string('role')->default('user');
+            $table->enum('role', ['admin', 'user'])->default('user');
             $table->string('password');
             $table->timestamps();
 

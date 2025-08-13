@@ -11,27 +11,40 @@ class SalaryController extends Controller
     //
 
     public function store(Request $request)
-    {
-        // Validate incoming request data
-        $validatedData = $request->validate([
-            'employee_id'  => 'required|exists:employee,id',
-            'month'        => 'required|string|max:20',
-            'year'         => 'required|integer',
-            'basic'        => 'required|numeric',
-            'bonus'        => 'required|numeric',
-            'deductions'   => 'required|numeric',
-            'payment_date' => 'required|date',
-        ]);
+{
+    // Validate incoming request data
+    $validatedData = $request->validate([
+        'employee_id'  => 'required|exists:employee,id',
+        'month'        => 'required|string|max:20',
+        'year'         => 'required|integer',
+        'basic'        => 'required|numeric',
+        'bonus'        => 'required|numeric',
+        'deductions'   => 'required|numeric',
+        'payment_date' => 'required|date',
+    ]);
 
-        // Create the salary record
-        $salary = Salary::create($validatedData);
+    // Check if salary already exists for the same employee, month, and year
+    $exists = Salary::where('employee_id', $validatedData['employee_id'])
+        ->where('month', $validatedData['month'])
+        ->where('year', $validatedData['year'])
+        ->exists();
 
-        // Return JSON response
+    if ($exists) {
         return response()->json([
-            'message' => 'Salary record created successfully',
-            'data'    => $salary
-        ], 201);
+            'message' => 'Salary for this employee for the specified month and year already exists.'
+        ], 422);
     }
+
+    // Create the salary record
+    $salary = Salary::create($validatedData);
+
+    // Return JSON response
+    return response()->json([
+        'message' => 'Salary record created successfully',
+        'data'    => $salary
+    ], 201);
+}
+
 
     public function getSalaryByEmployeeId($employee_id)
 {

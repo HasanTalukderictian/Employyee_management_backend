@@ -11,6 +11,7 @@ use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\EmployeeLeaveController;
 use App\Http\Controllers\TaskController;
 
 /*
@@ -66,12 +67,6 @@ Route::post('/update-emplyee/{id}', [EmployeeController::class, 'update']);
 
 Route::get('/view-emplyee/{id}', [EmployeeController::class, 'show']);
 
-// Leave
-
-Route::post('/add-leave', [LeaveController::class, 'store']);
-Route::get('/get-leave/{id}', [LeaveController::class, 'show']);
-Route::delete('/del-leave/{id}', [LeaveController::class, 'destroy']);
-
 
 // Salary
 Route::post('/add-salary', [SalaryController::class, 'store']);
@@ -87,6 +82,10 @@ Route::post('/users-store', [UsersController::class, 'store']);
 Route::delete('/del-users/{id}', [UsersController::class, 'destroy']);
 Route::post('/users-login', [UsersController::class, 'login']);
 Route::get('/get-users', [UsersController::class, 'view']);
+
+
+Route::post('/add-leaves', [EmployeeLeaveController::class, 'store']);
+Route::get('/get-leaves', [EmployeeLeaveController::class, 'index']);
 
 
 // Task

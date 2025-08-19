@@ -12,7 +12,7 @@ class EmployeeLeaveController extends Controller
 
 
 
-     public function index()
+public function index()
     {
         // Retrieve all leave records with related employee info
         $leaves = EmployeeLeave::with('employee')->get();
@@ -49,5 +49,32 @@ class EmployeeLeaveController extends Controller
         'data'    => $leave
     ], 201);
 }
+
+ public function apply(Request $request)
+    {
+        $request->validate([
+            'employee_id' => 'required|exists:employee,id',
+            'leave_type'  => 'required|in:Paid,Unpaid',
+            'start_date'  => 'required|date',
+            'end_date'    => 'required|date|after_or_equal:start_date',
+            'reason'      => 'required|string|max:500',
+        ]);
+
+        $leave = EmployeeLeave::create([
+            'employee_id'     => $request->employee_id,
+            'total_leave'     => 0, // optional, can calculate later
+            'taken_leave'     => 0,
+            'remaining_leave' => 0,
+            'leave_type'      => $request->leave_type,
+            'start_date'      => $request->start_date,
+            'end_date'        => $request->end_date,
+            'reason'          => $request->reason,
+        ]);
+
+        return response()->json([
+            'message' => 'Leave application submitted successfully!',
+            'data'    => $leave
+        ], 201);
+    }
 
 }

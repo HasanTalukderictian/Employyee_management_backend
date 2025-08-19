@@ -85,6 +85,7 @@ Route::get('/get-users', [UsersController::class, 'view']);
 
 
 Route::post('/add-leaves', [EmployeeLeaveController::class, 'store']);
+Route::post('/apply-leave', [EmployeeLeaveController::class, 'apply']);
 Route::get('/get-leaves', [EmployeeLeaveController::class, 'index']);
 
 

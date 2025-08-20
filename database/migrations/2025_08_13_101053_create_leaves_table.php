@@ -12,14 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employee_leave', function (Blueprint $table) {
-           $table->unsignedBigInteger('employee_id');
+            $table->unsignedBigInteger('employee_id')->primary(); // one balance row per employee
             $table->integer('total_leave')->default(0);
-            $table->integer('taken_leave')->default(0);
-            $table->integer('remaining_leave')->default(0);
-            $table->enum('leave_type', ['Paid', 'Unpaid'])->default('Paid'); // Only Paid or Unpaid
             $table->timestamps();
-
-            // Foreign key
             $table->foreign('employee_id')->references('id')->on('employee')->onDelete('cascade');
         });
     }

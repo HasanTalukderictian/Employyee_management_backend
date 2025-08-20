@@ -12,6 +12,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\EmployeeLeaveController;
+use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\TaskController;
 
 /*
@@ -84,9 +85,14 @@ Route::post('/users-login', [UsersController::class, 'login']);
 Route::get('/get-users', [UsersController::class, 'view']);
 
 
-Route::post('/add-leaves', [EmployeeLeaveController::class, 'store']);
-Route::post('/apply-leave', [EmployeeLeaveController::class, 'apply']);
 Route::get('/get-leaves', [EmployeeLeaveController::class, 'index']);
+Route::post('/add-leaves', [EmployeeLeaveController::class, 'store']);
+
+Route::post('/apply-leave', [LeaveRequestController::class, 'apply']);
+Route::get('/get-apply-leave', [LeaveRequestController::class, 'index']);
+Route::get('/my-leave-requests', [LeaveRequestController::class, 'myRequests']);
+Route::post('/leave-requests/{leaveRequest}/approve', [LeaveRequestController::class, 'approve']);
+Route::post('/leave-requests/{leaveRequest}/reject',  [LeaveRequestController::class, 'reject']);
 
 
 // Task

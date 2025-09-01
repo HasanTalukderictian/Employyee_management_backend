@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::table('tasks_and_task_activities', function (Blueprint $table) {
+            //
+        });
     }
 
     /**
@@ -19,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('tasks_and_task_activities', function (Blueprint $table) {
+            //
+        });
     }
 };

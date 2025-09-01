@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('task_activities', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('task_id')->constrained('tasks')->onDelete('cascade');
+            $table->foreignId('task_id')->constrained('tasks')->onDelete('cascade');
             $table->text('description');
             $table->timestamp('logged_at')->useCurrent();
+            $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
             $table->timestamps();
         });
     }

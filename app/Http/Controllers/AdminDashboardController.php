@@ -8,7 +8,7 @@ use App\Models\Department;
 use App\Models\Attendance;
 use App\Models\Desgination;
 use App\Models\Employee;
-use App\Models\Leave;
+use App\Models\LeaveRequest;
 use App\Models\Salary;
 use App\Models\Task;
 use App\Models\UsersModel;
@@ -24,7 +24,7 @@ class AdminDashboardController extends Controller
         $department = Department::all();
         $desgination = Desgination::all();
         $employee = Employee::all();
-        $leave = Leave::all();
+        $leave = LeaveRequest::all();
         $salary = Salary::all();
         $usersmodel = UsersModel::all();
         $task = Task::all();

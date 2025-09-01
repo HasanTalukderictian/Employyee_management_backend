@@ -79,6 +79,8 @@ Route::delete('/del-salary/{id}', [SalaryController::class, 'destroy']);
 Route::post('/add-check/{id}', [AttendanceController::class, 'store']);
 Route::post('/add-checkout/{id}', [AttendanceController::class, 'checkOut']);
 
+Route::post('/attendance/store', [AttendanceController::class, 'store']);
+
 Route::post('/users-store', [UsersController::class, 'store']);
 Route::delete('/del-users/{id}', [UsersController::class, 'destroy']);
 Route::post('/users-login', [UsersController::class, 'login']);
@@ -91,6 +93,8 @@ Route::post('/add-leaves', [EmployeeLeaveController::class, 'store']);
 Route::post('/apply-leave', [LeaveRequestController::class, 'apply']);
 Route::get('/get-apply-leave', [LeaveRequestController::class, 'index']);
 Route::get('/my-leave-requests', [LeaveRequestController::class, 'myRequests']);
+Route::middleware('auth:sanctum')->get('/my-leaves', [LeaveRequestController::class, 'myLeaves']);
+
 Route::post('/leave-requests/{leaveRequest}/approve', [LeaveRequestController::class, 'approve']);
 Route::post('/leave-requests/{leaveRequest}/reject',  [LeaveRequestController::class, 'reject']);
 
@@ -99,9 +103,9 @@ Route::post('/leave-requests/{leaveRequest}/reject',  [LeaveRequestController::c
 
 
 
-Route::get('/tasks', [TaskController::class, 'index']); 
-Route::post('/add-task', [TaskController::class, 'store']); 
-Route::put('/tasks/{id}', [TaskController::class, 'update']); 
+Route::get('/tasks', [TaskController::class, 'index']);
+Route::post('/add-task', [TaskController::class, 'store']);
+Route::post('/tasks/{id}', [TaskController::class, 'update']);
 
 //admin
 
@@ -111,4 +115,3 @@ Route::post('/users-logout', [UsersController::class, 'logout'])->middleware('au
 
 
 Route::get('/test-email', [UsersController::class, 'sendmail']);
-

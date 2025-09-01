@@ -63,14 +63,12 @@ class UsersController extends Controller
 
     public function login(Request $request)
     {
-        // Validate input
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        // Attempt login
-        $user = UsersModel::where('email', $credentials['email'])->first();
+        $user = UsersModel::with('employee')->where('email', $credentials['email'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json([
@@ -78,17 +76,14 @@ class UsersController extends Controller
             ], 401);
         }
 
-        // Check role (optional)
         $roleMessage = ($user->role === 'admin') ? 'Welcome Admin!' : 'Welcome User!';
-
-        // Generate token (Sanctum)
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful',
             'role_message' => $roleMessage,
             'token' => $token,
-            'data' => $user,
+            'data' => $user, // <-- will now include employee_id and employee details
         ], 200);
     }
 

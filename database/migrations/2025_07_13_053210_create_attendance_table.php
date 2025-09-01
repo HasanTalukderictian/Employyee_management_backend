@@ -11,21 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendance', function (Blueprint $table) {
-            $table->id();
-             $table->unsignedBigInteger('employee_id');
-            $table->date('date');
-            $table->time('check_in')->nullable();
-            $table->time('check_out')->nullable();
-            $table->enum('status', ['Present', 'Absent', 'Leave', 'Half-day']);
-            $table->timestamps();
+       if (!Schema::hasTable('attendance')) {
+            Schema::create('attendance', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('employee_id')->nullable(); // keep nullable for users
+                $table->unsignedBigInteger('user_id')->nullable();     // new column for users
+                $table->date('date');
+                $table->time('check_in')->nullable();
+                $table->time('check_out')->nullable();
+                $table->timestamps();
 
-            // Foreign key constraint
-            $table->foreign('employee_id')
-                  ->references('id')
-                  ->on('employee')
-                  ->onDelete('cascade');
-        });
+                // Foreign keys
+                $table->foreign('employee_id')->references('id')->on('employee')->onDelete('cascade'); 
+                $table->foreign('user_id')->references('id')->on('userasll')->onDelete('cascade');
+            });
+        }
     }
 
 

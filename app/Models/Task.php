@@ -11,10 +11,17 @@ class Task extends Model
 
     protected $table = 'tasks';
 
-    protected $fillable = ['title', 'due_date', 'status'];
+    protected $fillable = ['title', 'due_date', 'status', 'employee_id'];
 
     public function activities()
     {
         return $this->hasMany(TaskActivity::class);
     }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id');
+    }
+
+    
 }

@@ -9,15 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
-            $table->id();
-             $table->string('title');
-            $table->date('due_date');
-            $table->enum('status', ['Pending', 'Completed', 'Overdue'])->default('Pending');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('tasks')) {
+            Schema::create('tasks', function (Blueprint $table) {
+                $table->id();
+                $table->string('title');
+                $table->date('due_date');
+                $table->enum('status', ['Pending', 'Completed', 'Overdue'])->default('Pending');
+                
+                // Track which employee created the task
+                $table->unsignedBigInteger('employee_id');
+                $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+                
+                $table->timestamps();
+            });
+        }
     }
 
     /**

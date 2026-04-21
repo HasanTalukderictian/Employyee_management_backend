@@ -61,7 +61,7 @@ Route::middleware(['api'])->group(function () {
 });
 
 Route::get('/get-emplyee', [EmployeeController::class, 'index']);
-Route::delete('/del-emplyee/{id}', [EmployeeController::class, 'destroy']);
+Route::delete('/del-employee/{id}', [EmployeeController::class, 'destroy']);
 
 Route::get('/get-employee/{id}', [EmployeeController::class, 'show']);
 Route::post('/update-emplyee/{id}', [EmployeeController::class, 'update']);

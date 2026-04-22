@@ -12,7 +12,7 @@ class LeaveRequestController extends Controller
     public function apply(Request $request)
     {
         $request->validate([
-            'employee_id' => 'required|exists:employees,id', // table name check
+            'employee_id' => 'required|exists:employee,id', // table name check
             'leave_type'  => 'required|in:Paid,Unpaid',
             'start_date'  => 'required|date',
             'end_date'    => 'required|date|after_or_equal:start_date',

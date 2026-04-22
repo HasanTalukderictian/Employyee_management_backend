@@ -13,6 +13,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\EmployeeLeaveController;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\TargetController;
 use App\Http\Controllers\TaskController;
 
 /*
@@ -60,7 +61,7 @@ Route::middleware(['api'])->group(function () {
     Route::post('/add-emplyee', [EmployeeController::class, 'store']);
 });
 
-Route::get('/get-emplyee', [EmployeeController::class, 'index']);
+Route::get('/get-employee', [EmployeeController::class, 'index']);
 Route::delete('/del-employee/{id}', [EmployeeController::class, 'destroy']);
 
 Route::get('/get-employee/{id}', [EmployeeController::class, 'show']);
@@ -97,6 +98,14 @@ Route::middleware('auth:sanctum')->get('/my-leaves', [LeaveRequestController::cl
 
 Route::post('/leave-requests/{leaveRequest}/approve', [LeaveRequestController::class, 'approve']);
 Route::post('/leave-requests/{leaveRequest}/reject',  [LeaveRequestController::class, 'reject']);
+
+
+Route::post('/targets', [TargetController::class, 'store']);
+Route::get('/get-targets', [TargetController::class, 'index']);
+Route::post('/targets/sync/{employeeId}/{month}', [TargetController::class, 'syncAchievement']);
+Route::delete('/del-targets/{id}', [TargetController::class, 'destroy']);
+Route::post('/edit-targets/{id}', [TargetController::class, 'update']);
+
 
 
 // Task

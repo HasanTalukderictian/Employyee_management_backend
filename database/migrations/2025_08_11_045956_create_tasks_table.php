@@ -17,11 +17,11 @@ return new class extends Migration
                 $table->string('title');
                 $table->date('due_date');
                 $table->enum('status', ['Pending', 'Completed', 'Overdue'])->default('Pending');
-                
+
                 // Track which employee created the task
                 $table->unsignedBigInteger('employee_id');
-                $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
-                
+                $table->foreign('employee_id')->references('id')->on('employee')->onDelete('cascade');
+
                 $table->timestamps();
             });
         }

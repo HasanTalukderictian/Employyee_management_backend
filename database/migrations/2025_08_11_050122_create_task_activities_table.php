@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->timestamp('logged_at')->useCurrent();
             $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
-            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('employee_id')->references('id')->on('employee')->onDelete('cascade');
             $table->timestamps();
         });
     }

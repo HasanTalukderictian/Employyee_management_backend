@@ -3,15 +3,51 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\Target;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TargetAssignedMail;
 
 class TargetController extends Controller
 {
     //
 
-  public function store(Request $request)
+//   public function store(Request $request)
+// {
+//     $request->validate([
+//         'employee_id' => 'required|exists:employee,id',
+//         'month' => 'required',
+//         'target_value' => 'required|integer'
+//     ]);
+
+//     // 🔴 check duplicate
+//     $exists = Target::where('employee_id', $request->employee_id)
+//         ->where('month', $request->month)
+//         ->exists();
+
+//     if ($exists) {
+//         return response()->json([
+//             'message' => 'This employee already has a target for this month'
+//         ], 409); // conflict
+//     }
+
+//     $target = Target::create([
+//         'employee_id' => $request->employee_id,
+//         'month' => $request->month,
+//         'target_value' => $request->target_value,
+//         'achieved_value' => 0
+//     ]);
+
+//     return response()->json([
+//         'message' => 'Target created successfully',
+//         'data' => $target
+//     ]);
+// }
+
+
+public function store(Request $request)
 {
     $request->validate([
         'employee_id' => 'required|exists:employee,id',
@@ -19,7 +55,6 @@ class TargetController extends Controller
         'target_value' => 'required|integer'
     ]);
 
-    // 🔴 check duplicate
     $exists = Target::where('employee_id', $request->employee_id)
         ->where('month', $request->month)
         ->exists();
@@ -27,7 +62,7 @@ class TargetController extends Controller
     if ($exists) {
         return response()->json([
             'message' => 'This employee already has a target for this month'
-        ], 409); // conflict
+        ], 409);
     }
 
     $target = Target::create([
@@ -37,8 +72,23 @@ class TargetController extends Controller
         'achieved_value' => 0
     ]);
 
+    // 🔥 employee বের করো
+    $employee = Employee::find($request->employee_id);
+
+    // 🔥 mail পাঠাও
+    try {
+        Mail::to($employee->email)->send(
+            new TargetAssignedMail($employee, $request->month, $request->target_value)
+        );
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Target created but email failed',
+            'error' => $e->getMessage()
+        ]);
+    }
+
     return response()->json([
-        'message' => 'Target created successfully',
+        'message' => 'Target created and email sent',
         'data' => $target
     ]);
 }

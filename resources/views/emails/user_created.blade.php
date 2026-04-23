@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>User Created</title>
-</head>
-<body>
-    <h2>Welcome, {{ $user->name ?? 'User' }}!</h2>
-    <p>Your account has been successfully created.</p>
-    <p>Email: {{ $user->email }}</p>
-    <p>Thank you for joining us.</p>
-</body>
-</html>
+<h2>Welcome!</h2>
+
+<p>Your account has been successfully created.</p>
+
+<p><b>Email:</b> {{ $email }}</p>
+<p><b>Password:</b> {{ $password }}</p>
+
+<p>Please login and change your password.</p>

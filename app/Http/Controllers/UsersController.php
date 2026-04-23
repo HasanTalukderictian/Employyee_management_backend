@@ -14,43 +14,79 @@ class UsersController extends Controller
     /**
      * Store (Register) a new user.
      */
+    // public function store(Request $request)
+    // {
+    //     // Validate input
+    //     $validatedData = $request->validate([
+    //         'employee_id' => 'required|exists:employee,id',
+    //         'email'       => 'required|email|unique:userall,email',
+    //         'password'    => 'required|string|min:6',
+    //         'role'        => 'required|string|in:admin,user',
+    //     ]);
+
+    //     // Save original password for email
+    //     $plainPassword = $validatedData['password'];
+
+    //     // Create user with hashed password
+    //     $user = UsersModel::create([
+    //         'employee_id' => $validatedData['employee_id'],
+    //         'email'       => $validatedData['email'],
+    //         'password'    => Hash::make($plainPassword),
+    //         'role'        => $validatedData['role'],
+    //     ]);
+
+    //     // Send email to user (optional failure catch)
+    //     try {
+    //         Mail::to($user->email)->send(new UserCreatedMail($user->email, $plainPassword));
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'User created, but failed to send email',
+    //             'data'    => $user,
+    //             'error'   => $e->getMessage(),
+    //         ], 201);
+    //     }
+
+    //     return response()->json([
+    //         'message' => 'User created successfully and email sent',
+    //         'data'    => $user,
+    //     ], 201);
+    // }
+
+
     public function store(Request $request)
-    {
-        // Validate input
-        $validatedData = $request->validate([
-            'employee_id' => 'required|exists:employee,id',
-            'email'       => 'required|email|unique:userall,email',
-            'password'    => 'required|string|min:6',
-            'role'        => 'required|string|in:admin,user',
-        ]);
+{
+    $validatedData = $request->validate([
+        'employee_id' => 'required|exists:employee,id',
+        'email'       => 'required|email|unique:userall,email',
+        'password'    => 'required|string|min:6',
+        'role'        => 'required|string|in:admin,user',
+    ]);
 
-        // Save original password for email
-        $plainPassword = $validatedData['password'];
+    $plainPassword = $validatedData['password'];
 
-        // Create user with hashed password
-        $user = UsersModel::create([
-            'employee_id' => $validatedData['employee_id'],
-            'email'       => $validatedData['email'],
-            'password'    => Hash::make($plainPassword),
-            'role'        => $validatedData['role'],
-        ]);
+    $user = UsersModel::create([
+        'employee_id' => $validatedData['employee_id'],
+        'email'       => $validatedData['email'],
+        'password'    => Hash::make($plainPassword),
+        'role'        => $validatedData['role'],
+    ]);
 
-        // Send email to user (optional failure catch)
-        try {
-            Mail::to($user->email)->send(new UserCreatedMail($user->email, $plainPassword));
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'User created, but failed to send email',
-                'data'    => $user,
-                'error'   => $e->getMessage(),
-            ], 201);
-        }
-
+    try {
+        Mail::to($user->email)->send(
+            new UserCreatedMail($user->email, $plainPassword)
+        );
+    } catch (\Exception $e) {
         return response()->json([
-            'message' => 'User created successfully and email sent',
-            'data'    => $user,
-        ], 201);
+            'message' => 'User created but email failed',
+            'error' => $e->getMessage()
+        ]);
     }
+
+    return response()->json([
+        'message' => 'User created and email sent successfully',
+        'data' => $user
+    ]);
+}
 
 
 

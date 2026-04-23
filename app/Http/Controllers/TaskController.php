@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Target;
 use App\Models\Task;
 use App\Models\TaskActivity;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -45,29 +47,47 @@ class TaskController extends Controller
     }
 
 
+
     public function update(Request $request, $id)
-    {
-        $task = Task::findOrFail($id);
+{
+    $task = Task::findOrFail($id);
 
-        $validated = $request->validate([
-            'title'       => 'sometimes|string|max:255',
-            'due_date'    => 'sometimes|date',
-            'status'      => 'sometimes|in:Pending,Completed,Overdue',
-            'employee_id' => 'required|exists:employee,id', // who is updating
+    $validated = $request->validate([
+        'title'       => 'sometimes|string|max:255',
+        'due_date'    => 'sometimes|date',
+        'status'      => 'sometimes|in:Pending,Completed,Overdue',
+        'employee_id' => 'required|exists:employee,id',
+    ]);
+
+    $oldStatus = $task->status; // 🔥 old status save করো
+
+    $task->update($validated);
+
+    // activity log
+    if ($request->has('status')) {
+        TaskActivity::create([
+            'task_id'     => $task->id,
+            'description' => 'Status changed to ' . $request->status,
+            'employee_id' => $validated['employee_id'],
         ]);
-
-        $task->update($validated);
-
-        if ($request->has('status')) {
-            TaskActivity::create([
-                'task_id'     => $task->id,
-                'description' => 'Status changed to ' . $request->status,
-                'employee_id' => $validated['employee_id'],
-            ]);
-        }
-
-        return response()->json($task->load(['activities.employee', 'employee']));
     }
+
+    // 🔥 TARGET UPDATE LOGIC
+    if ($oldStatus !== 'Completed' && $request->status === 'Completed') {
+
+    $currentMonth = Carbon::parse($task->due_date)->format('F');
+
+    $target = Target::where('employee_id', $task->employee_id)
+        ->where('month', $currentMonth)
+        ->first();
+
+    if ($target) {
+        $target->increment('achieved_value');
+    }
+}
+
+    return response()->json($task->load(['activities.employee', 'employee']));
+}
 
 
     public function destroy($id)

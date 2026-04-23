@@ -105,6 +105,8 @@ Route::get('/get-targets', [TargetController::class, 'index']);
 Route::post('/targets/sync/{employeeId}/{month}', [TargetController::class, 'syncAchievement']);
 Route::delete('/del-targets/{id}', [TargetController::class, 'destroy']);
 Route::post('/edit-targets/{id}', [TargetController::class, 'update']);
+Route::get('/get-notification/{id}', [TargetController::class, 'getNotifications']);
+
 
 
 

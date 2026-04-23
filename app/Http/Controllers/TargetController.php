@@ -8,43 +8,12 @@ use App\Models\Target;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Notifications\TargetAssignedNotification;
 use App\Mail\TargetAssignedMail;
 
 class TargetController extends Controller
 {
     //
-
-//   public function store(Request $request)
-// {
-//     $request->validate([
-//         'employee_id' => 'required|exists:employee,id',
-//         'month' => 'required',
-//         'target_value' => 'required|integer'
-//     ]);
-
-//     // 🔴 check duplicate
-//     $exists = Target::where('employee_id', $request->employee_id)
-//         ->where('month', $request->month)
-//         ->exists();
-
-//     if ($exists) {
-//         return response()->json([
-//             'message' => 'This employee already has a target for this month'
-//         ], 409); // conflict
-//     }
-
-//     $target = Target::create([
-//         'employee_id' => $request->employee_id,
-//         'month' => $request->month,
-//         'target_value' => $request->target_value,
-//         'achieved_value' => 0
-//     ]);
-
-//     return response()->json([
-//         'message' => 'Target created successfully',
-//         'data' => $target
-//     ]);
-// }
 
 
 public function store(Request $request)
@@ -86,6 +55,8 @@ public function store(Request $request)
             'error' => $e->getMessage()
         ]);
     }
+
+    $employee->notify(new TargetAssignedNotification($target));
 
     return response()->json([
         'message' => 'Target created and email sent',
@@ -199,5 +170,20 @@ public function destroy($id)
     ]);
 }
 
+
+public function getNotifications($employeeId)
+{
+    $employee = Employee::find($employeeId);
+
+    if (!$employee) {
+        return response()->json([
+            'message' => 'Employee not found'
+        ], 404);
+    }
+
+    return response()->json([
+        'data' => $employee->notifications
+    ]);
+}
 
 }

@@ -1,4 +1,4 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://i.ibb.co.com/G4B8FzW5/Employee-Admin-Panel.png" width="400" alt="Hasan Project"></a></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://i.ibb.co.com/WvcGRPm8/screencapture-localhost-5173-admin-home-2026-04-23-16-05-50.png" width="400" alt="Hasan Project"></a></p>
 
 <p align="center">
 <a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>

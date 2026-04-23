@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Notifications\TargetAssignedNotification;
 use App\Mail\TargetAssignedMail;
+use App\Models\TaskActivity;
 
 class TargetController extends Controller
 {
@@ -150,6 +151,9 @@ public function store(Request $request)
         'data' => $target
     ]);
 }
+
+
+
 
 public function destroy($id)
 {

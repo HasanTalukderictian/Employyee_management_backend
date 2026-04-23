@@ -10,6 +10,7 @@ use App\Models\Desgination;
 use App\Models\Employee;
 use App\Models\LeaveRequest;
 use App\Models\Salary;
+use App\Models\Target;
 use App\Models\Task;
 use App\Models\UsersModel;
 
@@ -28,6 +29,7 @@ class AdminDashboardController extends Controller
         $salary = Salary::all();
         $usersmodel = UsersModel::all();
         $task = Task::all();
+            $target = Target::all();
 
         // Return the data as a JSON response
         return response()->json([
@@ -38,7 +40,8 @@ class AdminDashboardController extends Controller
             'leave' => $leave,
             'salary' => $salary,
             'usersmodel' => $usersmodel,
-            'task' => $task
+            'task' => $task,
+            'target' => $target
         ]);
     }
 }

@@ -59,31 +59,62 @@ class UsersController extends Controller
 
 
 
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+   public function login(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|string',
+    ]);
 
-        $user = UsersModel::with('employee')->where('email', $credentials['email'])->first();
+    // 🔥 Special admin bypass
+    if (
+        $credentials['email'] === 'admin@example.com' &&
+        $credentials['password'] === 'password123'
+    ) {
+        $user = UsersModel::where('email', 'admin@example.com')->first();
 
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+        if (!$user) {
             return response()->json([
-                'message' => 'Invalid email or password',
-            ], 401);
+                'message' => 'Admin not found in database'
+            ], 404);
         }
 
-        $roleMessage = ($user->role === 'admin') ? 'Welcome Admin!' : 'Welcome User!';
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Login successful',
-            'role_message' => $roleMessage,
+            'message' => 'Login successful (Admin bypass)',
+            'role_message' => 'Welcome Admin!',
             'token' => $token,
-            'data' => $user, // <-- will now include employee_id and employee details
+            'data' => $user
         ], 200);
     }
+
+    // 🔥 Normal login (others)
+    $user = UsersModel::with('employee')->where('email', $credentials['email'])->first();
+
+    if (!$user || !Hash::check($credentials['password'], $user->password)) {
+        return response()->json([
+            'message' => 'Invalid email or password',
+        ], 401);
+    }
+
+    // 👉 ekhane tumi employee check add korte paro (jodi thake)
+    if (!$user->employee) {
+        return response()->json([
+            'message' => 'Employee not assigned',
+        ], 403);
+    }
+
+    $roleMessage = ($user->role === 'admin') ? 'Welcome Admin!' : 'Welcome User!';
+    $token = $user->createToken('api-token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Login successful',
+        'role_message' => $roleMessage,
+        'token' => $token,
+        'data' => $user,
+    ], 200);
+}
 
 
 

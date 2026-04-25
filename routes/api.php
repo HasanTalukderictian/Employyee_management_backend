@@ -126,3 +126,5 @@ Route::post('/users-logout', [UsersController::class, 'logout'])->middleware('au
 
 
 Route::get('/test-email', [UsersController::class, 'sendmail']);
+
+Route::post('/scan-attendance', [AttendanceController::class, 'scanAttendance']);

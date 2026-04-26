@@ -119,4 +119,15 @@ class LeaveRequestController extends Controller
 
         return response()->json(['message' => 'Leave updated and user notified']);
     }
+
+    public function myLeaves(Request $request)
+{
+    $request->validate(['employee_id' => 'required|exists:employees,id']);
+
+    $leaves = LeaveRequest::where('employee_id', $request->employee_id)
+        ->orderByDesc('created_at')
+        ->get();
+
+    return response()->json($leaves);
+}
 }

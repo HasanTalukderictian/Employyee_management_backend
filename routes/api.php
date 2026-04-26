@@ -2,11 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\DepartmentController;
-use App\Http\Controllers\api\DesignationController;
-use App\Http\Controllers\api\AdminAuthController;
+use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\DesignationController;
+use App\Http\Controllers\Api\AdminAuthController;
 use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\UsersController;

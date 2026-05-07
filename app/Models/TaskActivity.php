@@ -11,7 +11,7 @@ class TaskActivity extends Model
 
     protected $table = 'task_activities';
 
-    protected $fillable = ['task_id', 'description', 'logged_at', 'employee_id'];
+    protected $fillable = ['task_id', 'description', 'logged_at', 'employee_id', 'note'];
 
     public function task()
     {

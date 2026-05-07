@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\LeaveRequest;
@@ -8,11 +9,13 @@ use Illuminate\Support\Carbon;
 
 class LeaveRequestController extends Controller
 {
-    // POST /api/apply-leave
+    // =========================
+    // APPLY LEAVE (SAFE)
+    // =========================
     public function apply(Request $request)
     {
         $request->validate([
-            'employee_id' => 'required|exists:employee,id', // table name check
+            'employee_id' => 'required|exists:employee,id',
             'leave_type'  => 'required|in:Paid,Unpaid',
             'start_date'  => 'required|date',
             'end_date'    => 'required|date|after_or_equal:start_date',
@@ -21,31 +24,36 @@ class LeaveRequestController extends Controller
 
         $start = Carbon::parse($request->start_date);
         $end   = Carbon::parse($request->end_date);
-        $days  = $start->diffInDays($end) + 1;
 
         $leave = LeaveRequest::create([
             'employee_id' => $request->employee_id,
             'leave_type'  => $request->leave_type,
             'start_date'  => $start->toDateString(),
             'end_date'    => $end->toDateString(),
-            'days'        => $days,
+            'days'        => $start->diffInDays($end) + 1,
             'reason'      => $request->reason,
             'status'      => 'pending',
         ]);
 
-        return response()->json(['message' => 'Leave application submitted!', 'data' => $leave], 201);
+        return response()->json([
+            'message' => 'Leave application submitted!',
+            'data'    => $leave
+        ], 201);
     }
 
-    // POST /api/leave-requests/{id}/approve
+    // =========================
+    // APPROVE (SAFE + OPTIMIZED)
+    // =========================
     public function approve(Request $request, $id)
     {
-        $leave = LeaveRequest::findOrFail($id);
+        $leave = LeaveRequest::select('id','employee_id','status')
+            ->findOrFail($id);
 
         $leave->update([
             'status'      => 'approved',
-            'approved_by' => $request->input('approved_by'),
+            'approved_by' => $request->approved_by,
             'approved_at' => now(),
-            'remarks'     => $request->input('remarks'),
+            'remarks'     => $request->remarks,
         ]);
 
         Notification::create([
@@ -54,19 +62,24 @@ class LeaveRequestController extends Controller
             'message' => 'Your leave request has been approved.',
         ]);
 
-        return response()->json(['message' => 'Leave approved', 'data' => $leave]);
+        return response()->json([
+            'message' => 'Leave approved',
+        ]);
     }
 
-    // POST /api/leave-requests/{id}/reject
+    // =========================
+    // REJECT (SAFE)
+    // =========================
     public function reject(Request $request, $id)
     {
-        $leave = LeaveRequest::findOrFail($id);
+        $leave = LeaveRequest::select('id','employee_id')
+            ->findOrFail($id);
 
         $leave->update([
             'status'      => 'rejected',
-            'approved_by' => $request->input('approved_by'),
+            'approved_by' => $request->approved_by,
             'approved_at' => now(),
-            'remarks'     => $request->input('remarks'),
+            'remarks'     => $request->remarks,
         ]);
 
         Notification::create([
@@ -75,59 +88,85 @@ class LeaveRequestController extends Controller
             'message' => 'Your leave request has been rejected.',
         ]);
 
-        return response()->json(['message' => 'Leave rejected', 'data' => $leave]);
+        return response()->json([
+            'message' => 'Leave rejected',
+        ]);
     }
 
-    // GET /api/my-leave-requests?employee_id=123
+    // =========================
+    // MY REQUESTS (PAGINATION)
+    // =========================
     public function myRequests(Request $request)
     {
-        $request->validate(['employee_id' => 'required|exists:employees,id']);
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id'
+        ]);
 
-        $leaves = LeaveRequest::where('employee_id', $request->employee_id)
-            ->orderByDesc('created_at')
-            ->get();
+        $leaves = LeaveRequest::select('id','leave_type','start_date','end_date','status','created_at')
+            ->where('employee_id', $request->employee_id)
+            ->orderByDesc('id')
+            ->paginate(20);
 
         return response()->json($leaves);
     }
 
-    // GET /api/get-leaves
-    public function index()
+    // =========================
+    // ADMIN INDEX (CURSOR PAGINATION - BEST)
+    // =========================
+    public function index(Request $request)
     {
-        $leaves = LeaveRequest::with(['employee', 'approver'])
-            ->orderByDesc('created_at')
-            ->get();
+        $leaves = LeaveRequest::select('id','employee_id','leave_type','status','created_at', 'reason','start_date','end_date')
+            ->with([
+                'employee:id,first_name,last_name',
+                'approver:id,name'
+            ])
+            ->orderBy('id', 'desc')
+            ->cursorPaginate(20);
 
         return response()->json($leaves);
     }
 
-    // Update leave status and notify user
+    // =========================
+    // UPDATE STATUS (SAFE)
+    // =========================
     public function updateLeaveStatus(Request $request, $id)
     {
         $request->validate([
             'status' => 'required|in:approved,rejected',
         ]);
 
-        $leave = LeaveRequest::findOrFail($id);
-        $leave->status = $request->status;
-        $leave->save();
+        $leave = LeaveRequest::select('id','employee_id')
+            ->findOrFail($id);
+
+        $leave->update([
+            'status' => $request->status,
+        ]);
 
         Notification::create([
             'user_id' => $leave->employee_id,
-            'title'   => 'Leave Request Update',
+            'title'   => 'Leave Update',
             'message' => "Your leave request has been {$request->status}.",
         ]);
 
-        return response()->json(['message' => 'Leave updated and user notified']);
+        return response()->json([
+            'message' => 'Leave updated successfully'
+        ]);
     }
 
+    // =========================
+    // MY LEAVES (CURSOR SAFE)
+    // =========================
     public function myLeaves(Request $request)
-{
-    $request->validate(['employee_id' => 'required|exists:employees,id']);
+    {
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id'
+        ]);
 
-    $leaves = LeaveRequest::where('employee_id', $request->employee_id)
-        ->orderByDesc('created_at')
-        ->get();
+        $leaves = LeaveRequest::select('id','leave_type','start_date','end_date','status','created_at')
+            ->where('employee_id', $request->employee_id)
+            ->orderBy('id', 'desc')
+            ->cursorPaginate(20);
 
-    return response()->json($leaves);
-}
+        return response()->json($leaves);
+    }
 }

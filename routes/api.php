@@ -105,6 +105,7 @@ Route::post('/targets/sync/{employeeId}/{month}', [TargetController::class, 'syn
 Route::delete('/del-targets/{id}', [TargetController::class, 'destroy']);
 Route::post('/edit-targets/{id}', [TargetController::class, 'update']);
 Route::get('/get-notification/{id}', [TargetController::class, 'getNotifications']);
+Route::post('/mark-notifications-read/{employeeId}', [TargetController::class, 'markAsRead']);
 
 
 

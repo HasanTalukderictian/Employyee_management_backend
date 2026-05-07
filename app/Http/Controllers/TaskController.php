@@ -26,25 +26,58 @@ class TaskController extends Controller
     }
 
 
+    // public function store(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'title'       => 'required|string|max:255',
+    //         'due_date'    => 'required|date',
+    //         'status'      => 'required|in:Pending,Completed,Overdue',
+    //         'employee_id' => 'required|exists:employee,id', // who is creating the task
+    //     ]);
+
+    //     $task = Task::create($validated);
+
+    //     TaskActivity::create([
+    //         'task_id'     => $task->id,
+    //         'description' => 'Task Created',
+    //         'employee_id' => $validated['employee_id'], // track creator
+    //     ]);
+
+    //     return response()->json($task->load(['activities.employee', 'employee']), 201);
+    // }
+
+
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title'       => 'required|string|max:255',
-            'due_date'    => 'required|date',
-            'status'      => 'required|in:Pending,Completed,Overdue',
-            'employee_id' => 'required|exists:employee,id', // who is creating the task
-        ]);
+{
+    $validated = $request->validate([
+        'title'       => 'required|string|max:255',
+        'due_date'    => 'required|date',
+        'status'      => 'required|in:Pending,Completed,Overdue',
+        'employee_id' => 'required|exists:employees,id',
+        'note'        => 'nullable|string', // 👈 new
+    ]);
 
-        $task = Task::create($validated);
+    // Task create
+    $task = Task::create([
+        'title'       => $validated['title'],
+        'due_date'    => $validated['due_date'],
+        'status'      => $validated['status'],
+        'employee_id' => $validated['employee_id'],
+    ]);
 
-        TaskActivity::create([
-            'task_id'     => $task->id,
-            'description' => 'Task Created',
-            'employee_id' => $validated['employee_id'], // track creator
-        ]);
+    // Activity log create
+    TaskActivity::create([
+        'task_id'     => $task->id,
+        'description' => 'Task Created',
+        'employee_id' => $validated['employee_id'],
+        'note'        => $validated['note'] ?? null, // 👈 save note
+    ]);
 
-        return response()->json($task->load(['activities.employee', 'employee']), 201);
-    }
+    return response()->json(
+        $task->load(['activities.employee', 'employee']),
+        201
+    );
+}
 
 
 

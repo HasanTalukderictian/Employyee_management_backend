@@ -190,4 +190,23 @@ public function getNotifications($employeeId)
     ]);
 }
 
+// এমপ্লয়ীর সব আনরিড নোটিফিকেশনকে রিড হিসেবে মার্ক করার ফাংশন
+public function markAsRead($employeeId)
+{
+    $employee = Employee::find($employeeId);
+
+    if (!$employee) {
+        return response()->json([
+            'message' => 'Employee not found'
+        ], 404);
+    }
+
+    // শুধুমাত্র আনরিড নোটিফিকেশনগুলো ধরবে এবং সেগুলোকে মার্ক করবে
+    $employee->unreadNotifications->markAsRead();
+
+    return response()->json([
+        'message' => 'All notifications marked as read'
+    ]);
+}
+
 }
